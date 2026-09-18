@@ -32,7 +32,10 @@ A full-stack Point of Sale (POS) and inventory management web application tailor
 ## 📁 Project Structure
 
 ```text
-allure-jewelries-pos/
+## 📁 Project Structure
+
+```text
+Allure Beauty App/
 ├── public/
 │   ├── images/          # Product jewelry catalog images
 │   ├── index.html       # Storefront & POS interface
