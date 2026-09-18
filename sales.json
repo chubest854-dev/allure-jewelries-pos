@@ -1,0 +1,57 @@
+[
+  {
+    "orderId": "ALU-259413",
+    "date": "2026-09-17T09:27:39.414Z",
+    "items": [
+      {
+        "id": 1,
+        "name": "Classic Gold Hoop",
+        "displayName": "Classic Gold Hoop",
+        "unitPrice": 45000,
+        "quantityOrWeight": 1,
+        "isGold": false,
+        "totalPrice": 45000
+      },
+      {
+        "id": 2,
+        "name": "Chunky Silver Hoops",
+        "displayName": "Chunky Silver Hoops",
+        "unitPrice": 38000,
+        "quantityOrWeight": 1,
+        "isGold": false,
+        "totalPrice": 38000
+      },
+      {
+        "id": 31,
+        "name": "18k Solid Gold Chain",
+        "displayName": "18k Solid Gold Chain (10g)",
+        "unitPrice": 85000,
+        "quantityOrWeight": 10,
+        "isGold": true,
+        "totalPrice": 850000
+      },
+      {
+        "id": 18,
+        "name": "Rose Gold Tennis Bracelet",
+        "displayName": "Rose Gold Tennis Bracelet",
+        "unitPrice": 75000,
+        "quantityOrWeight": 1,
+        "isGold": false,
+        "totalPrice": 75000
+      },
+      {
+        "id": 19,
+        "name": "Charm Link Bracelet",
+        "displayName": "Charm Link Bracelet",
+        "unitPrice": 55000,
+        "quantityOrWeight": 1,
+        "isGold": false,
+        "totalPrice": 55000
+      }
+    ],
+    "paymentMethod": "Cash",
+    "subtotal": 1063000,
+    "discount": 53150,
+    "total": 1009850
+  }
+]

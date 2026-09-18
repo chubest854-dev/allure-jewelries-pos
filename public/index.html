@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allure Jewelries POS & Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="pos-container">
+    <!-- Main Left Section -->
+    <main class="main-section">
+      <header>
+        <div>
+          <h1>Allure Jewelries</h1>
+          <div class="view-toggles">
+            <button type="button" class="toggle-btn active" id="btn-view-pos" onclick="switchView('pos')">Cashier POS</button>
+            <button type="button" class="toggle-btn" id="btn-view-sales" onclick="switchView('sales')">Sales Reports</button>
+            <button type="button" class="toggle-btn" id="btn-view-inventory" onclick="switchView('inventory')">Stock Manager</button>
+          </div>
+        </div>
+        <input type="text" id="search-bar" placeholder="Search jewelry or category...">
+      </header>
+
+      <!-- VIEW 1: POS VIEW -->
+      <section id="pos-view">
+        <div class="category-nav">
+          <button class="cat-btn active" data-category="all">All</button>
+          <button class="cat-btn" data-category="hoops">Hoops</button>
+          <button class="cat-btn" data-category="studs">Studs</button>
+          <button class="cat-btn" data-category="bracelets">Bracelets</button>
+          <button class="cat-btn" data-category="earrings">Earrings</button>
+          <button class="cat-btn" data-category="gold">Gold</button>
+          <button class="cat-btn" data-category="gold-exchange">Gold Scale</button>
+          <button class="cat-btn" data-category="piercing">Piercing</button>
+        </div>
+        <div id="product-grid" class="product-grid"></div>
+      </section>
+
+      <!-- VIEW 2: SALES REPORTS -->
+      <section id="sales-view" style="display: none;">
+        <div class="report-filters">
+          <button class="cat-btn active" onclick="filterSales('today')">Today</button>
+          <button class="cat-btn" onclick="filterSales('week')">This Week</button>
+          <button class="cat-btn" onclick="filterSales('month')">This Month</button>
+          <button class="cat-btn" onclick="filterSales('all')">All Time</button>
+        </div>
+
+        <div class="kpi-cards">
+          <div class="kpi-card">
+            <h4>Total Revenue</h4>
+            <p id="kpi-revenue">₦0.00</p>
+          </div>
+          <div class="kpi-card">
+            <h4>Orders Completed</h4>
+            <p id="kpi-orders">0</p>
+          </div>
+          <div class="kpi-card">
+            <h4>Discounts Given</h4>
+            <p id="kpi-discounts">₦0.00</p>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date & Time</th>
+              <th>Items</th>
+              <th>Payment</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="sales-table-body"></tbody>
+        </table>
+      </section>
+
+      <!-- VIEW 3: STOCK MANAGER -->
+      <section id="inventory-view" style="display: none;">
+        <div class="low-stock-alert" id="low-stock-banner" style="display: none;"></div>
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Category</th>
+              <th>Rate / Price</th>
+              <th>Current Stock</th>
+              <th>Status</th>
+              <th>Quick Restock</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-table-body"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- Cart Section (POS View Only) -->
+    <section class="cart-section" id="cart-panel">
+      <h2>Current Order</h2>
+      <div id="cart-items" class="cart-items"></div>
+      
+      <div class="cart-footer">
+        <div class="summary-line">
+          <span>Subtotal:</span>
+          <span id="subtotal-price">₦0.00</span>
+        </div>
+        <div class="summary-line discount-row" id="discount-row" style="display: none;">
+          <span>VIP Discount (5% over ₦1M):</span>
+          <span id="discount-amount" style="color: #ff69b4;">-₦0.00</span>
+        </div>
+        <div class="summary-line total-line">
+          <span>Total:</span>
+          <span id="cart-total">₦0.00</span>
+        </div>
+        <button id="checkout-btn" onclick="handleCheckout()">Checkout</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Digital Gold Scale Modal -->
+  <div id="gold-scale-modal" class="modal-overlay">
+    <div class="payment-modal-box" style="width: 400px; border: 2px solid #ffd700;">
+      <h3 id="scale-modal-title" style="color: #b8860b; margin-bottom: 4px;">⚖️ Gold Weight Scale</h3>
+      <p id="scale-modal-rate" style="color: #ff69b4; font-weight: 600; font-size: 0.95em; margin-bottom: 15px;"></p>
+      
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 16px;">
+        <button type="button" class="cat-btn" style="padding: 6px 12px;" onclick="setModalScaleWeight(1)">1g</button>
+        <button type="button" class="cat-btn" style="padding: 6px 12px;" onclick="setModalScaleWeight(5)">5g</button>
+        <button type="button" class="cat-btn" style="padding: 6px 12px;" onclick="setModalScaleWeight(10)">10g</button>
+        <button type="button" class="cat-btn" style="padding: 6px 12px;" onclick="setModalScaleWeight(25)">25g</button>
+        <button type="button" class="cat-btn" style="padding: 6px 12px;" onclick="setModalScaleWeight(50)">50g</button>
+      </div>
+
+      <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <input type="number" id="modal-scale-input" placeholder="0.00" step="0.1" style="width: 140px; text-align: center; font-size: 1.2em; font-weight: bold; padding: 8px; border: 2px solid #ffd700; border-radius: 8px;">
+        <span style="font-weight: bold; color: #b8860b; font-size: 1.1em;">grams</span>
+      </div>
+
+      <button type="button" onclick="confirmGoldWeightToCart()" id="checkout-btn" style="margin-bottom: 10px;">Add Weighted Piece to Cart</button>
+      <button type="button" onclick="closeGoldScaleModal()" class="cancel-modal-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Checkout Payment Method Modal -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="payment-modal-box">
+      <h3>Select Payment Method</h3>
+      <p id="modal-total-display" style="font-size: 1.1rem; font-weight: bold; color: #ff69b4; margin-bottom: 20px;"></p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <button onclick="processPayment('POS Card Terminal')">💳 POS Card Terminal</button>
+        <button onclick="processPayment('Bank Transfer')">🏦 Bank Transfer</button>
+        <button onclick="processPayment('Cash')">💵 Cash</button>
+      </div>
+
+      <button onclick="closeCheckoutModal()" class="cancel-modal-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Printable Thermal Receipt Modal -->
+  <div class="modal-overlay" id="receipt-modal">
+    <div class="receipt-box" id="printable-receipt">
+      <div class="receipt-header">
+        <h2>ALLURE JEWELRIES</h2>
+        <p>Luxury & Fine Gold Pieces</p>
+        <p id="receipt-date"></p>
+        <p id="receipt-id"></p>
+        <p id="receipt-method"></p>
+      </div>
+      <hr>
+      <div id="receipt-items-list"></div>
+      <hr>
+      <div class="receipt-totals">
+        <div class="summary-line">
+          <span>Subtotal:</span>
+          <span id="rec-subtotal"></span>
+        </div>
+        <div class="summary-line" id="rec-discount-line" style="display: none;">
+          <span>5% VIP Discount:</span>
+          <span id="rec-discount" style="color: #2e7d32;"></span>
+        </div>
+        <div class="summary-line receipt-grand-total">
+          <span>Amount Paid:</span>
+          <span id="rec-total"></span>
+        </div>
+      </div>
+      <hr>
+      <p class="receipt-footer">Thank you for shopping with Allure!</p>
+      <div class="modal-buttons no-print">
+        <button onclick="window.print()" class="print-btn">Print Receipt</button>
+        <button onclick="closeReceipt(true)" class="close-btn">New Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
